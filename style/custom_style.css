@@ -23,6 +23,18 @@ div.panel-body > form > label {
 	text-align: left;
 }
 
+div.btn-group {
+	padding-left: 0px;
+	padding-right: 0px;
+	margin-bottom: 15px;
+}
+
+div.btn-group button {
+	border-radius: 0px;
+}
+
 div.jumbotron {
 	background-image: url('../images/jumbotron_pic_lighter.jpg');
+	margin-bottom: 0px;
+	border-radius:0px;
 }
