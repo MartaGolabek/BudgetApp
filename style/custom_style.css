@@ -1,0 +1,28 @@
+div.panel-heading {
+	height:34px;
+	padding-top: 5px;
+	padding-left: 15px;
+}
+
+div.panel-body {
+	padding-left: 15px;
+}
+
+div.panel-body > form {
+	margin-top: 15px;
+}
+
+div.panel-body > button {
+	margin-top: 15px;
+	margin-bottom: 15px;
+	margin-left: 15px;
+}
+
+div.panel-body > form > label {
+	/*padding-right: 15px;*/
+	text-align: left;
+}
+
+div.jumbotron {
+	background-image: url('../images/jumbotron_pic_lighter.jpg');
+}
