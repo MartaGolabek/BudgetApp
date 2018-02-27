@@ -10,6 +10,7 @@
 		<link rel="stylesheet" type="text/css" href="style/custom_style.css">
 
 		<script type="text/javascript" src="bower_components/angular/angular.min.js"></script>
+		<script type="text/javascript" src="bower_components/angular-route/angular-route.min.js"></script>
 		<script type="text/javascript" src="controller/app.js"></script>
 		<title>Budget App</title>
 	</head>
@@ -31,35 +32,8 @@
 			    <button type="button" class="btn btn-default col-sm-12">Analysis</button>
 			  </div>
 			</div>
-		
 
-			<!-- NEW BUDGET ENTRY -->
-			<div class="panel panel-default">
-			  <div class="panel-heading">Set a new monthly budget</div>
-			  <div class="panel-body">
-			  	  <form name="myForm">
-				    <label for="yearSelect" class="col-sm-2"> Year: </label>
-				    <select name="yearSelect" id="yearSelect" ng-model="budgetEntity.year">
-				      <option ng-repeat="option in data.years">{{option.year}}</option>
-				    </select>
-				  </form>
-
-				  <form name="myForm">
-				    <label for="monthSelect" class="col-sm-2"> Month: </label>
-				    <select name="monthSelect" id="monthSelect" ng-model="budgetEntity.month">
-				      <option ng-repeat="option in data2.months">{{option.month}}</option>
-				    </select>
-				  </form>
-
-				  <form name="myForm" class="form-inline">
-				    <label for="budget" class="col-sm-2">Budget: </label>
-					  <input type="text" class="form-control col-sm-2" id="budget" ng-model="budgetEntity.budgetValue">
-				  </form>
-
-				  <button type="button" class="btn btn-primary">Save</button>
-
-			  </div>
-			</div>
+			<div ng-view></div>
 
 		</div>
 	</body>

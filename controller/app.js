@@ -1,8 +1,26 @@
 (function() {
 'use strict';
 
-angular.module('budgetApp', [])
-.controller("budgetController", ['$scope', function($scope) {
+var app = angular.module('budgetApp', ['ngRoute']);
+
+app.config(function($routeProvider){
+  return $routeProvider
+    .when('/targets', {
+      controller: 'budgetController',
+      templateUrl: 'templates/targets.html'
+    })
+    .when('/expenses', {
+      controller: 'budgetController',
+      templateUrl: 'templates/expenses.html'
+    })
+    .when('/analysis', {
+      controller: 'budgetController',
+      templateUrl: 'templates/analysis.html'
+    })
+    .otherwise({ redirectTo: '/' });
+});
+
+app.controller("budgetController", ['$scope', function($scope) {
 
 	// mockup for year select
 	// TODO: implement CRUD operations
