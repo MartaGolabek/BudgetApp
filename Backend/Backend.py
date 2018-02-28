@@ -2,6 +2,7 @@ from flask import Flask, jsonify, request, render_template #import objects from 
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
 import os
+from flask_cors import CORS, cross_origin
 
 app = Flask(__name__) # define app using Flask
 basedir = os.path.abspath(os.path.dirname(__file__))
@@ -9,6 +10,8 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'bu
 db = SQLAlchemy(app)
 ma = Marshmallow(app)
 
+app.config['CORS_HEADERS'] = 'Content-Type'
+cors = CORS(app, resources={r"/expenses/*": {"origins": "http://localhost:port"}})
 
 class Expense(db.Model):
     ID = db.Column(db.Integer, primary_key=True)
@@ -26,7 +29,7 @@ class Expense(db.Model):
 class ExpenseSchema(ma.Schema):
     class Meta:
         # Fields to expose
-        fields = ['PRODUCT_NAME', 'PRODUCT_CAT', 'PRICE']
+        fields = ['ID', 'PRODUCT_NAME', 'PRODUCT_CAT', 'PRICE']
 
 
 expense_schema = ExpenseSchema()
@@ -39,6 +42,7 @@ def home():
 
 
 @app.route('/expenses', methods=['GET'])
+@cross_origin(origin='localhost', headers=['Content-Type','Authorization'])
 def get_all():
     all_expenses = Expense.query.all()
     return expenses_schema.jsonify(all_expenses)
@@ -46,12 +50,14 @@ def get_all():
 
 
 @app.route('/expenses/<int:id>', methods=['GET'])
+@cross_origin(origin='localhost', headers=['Content-Type','Authorization'])
 def get_one(id):
     expense = Expense.query.get(id)
     return expense_schema.jsonify(expense)
 
 
 @app.route('/expenses', methods=['POST'])
+@cross_origin(origin='localhost', headers=['Content-Type','Authorization'])
 def add_one():
     # retrieve a name from a request body
     # ID automatically or have to be explicitly set?
@@ -66,6 +72,7 @@ def add_one():
 
 
 @app.route('/expenses/<int:id>', methods=['PUT'])
+@cross_origin(origin='localhost', headers=['Content-Type','Authorization'])
 def edit_one(id):
     new_expense = Expense.query.get(id)
     product_name = request.json['product_name']
@@ -79,6 +86,7 @@ def edit_one(id):
 
 
 @app.route('/expenses/<int:id>', methods=['DELETE'])
+@cross_origin(origin='localhost', headers=['Content-Type','Authorization'])
 def remove_one(id):
     remove_expense = Expense.query.get(id)
     db.session.delete(remove_expense)

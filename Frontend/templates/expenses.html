@@ -8,32 +8,34 @@
                     <table class="table table-striped table-bordered">
                         <thead>
                             <tr>
-                                <th><input type="checkbox" ng-model="selectedAll" ng-click="checkAll()" /></th>
+                                <th><input type="checkbox" ng-model="selectedAll" ng-click="checkAll()" />
+
+                                </th>
                                 <th>Product</th>
                                 <th>Product category</th>
                                 <th>Price (EUR)</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr ng-repeat="productDetail in productDetails">
+                            <tr ng-repeat="expense in expenses">
                                 <td>
-                                    <input type="checkbox" ng-model="productDetail.selected"/></td>
+                                    <input type="checkbox" ng-model="expense.selected"/></td>
                                 <td>
-                                    <input type="text" class="form-control" ng-model="productDetail.product" required/></td>
+                                    <input type="text" class="form-control" ng-model="expense.PRODUCT_NAME" required/></td>
                                 <td>
                                     <!-- <input type="text" class="form-control" ng-model="productDetail.category" required/> -->
-                                    <select name="catSelect" id="catSelect" ng-model="productDetail.category">
+                                    <select name="catSelect" id="catSelect" ng-model="expense.PRODUCT_CAT">
 								      <option ng-repeat="option in productCategories">{{option.cat}}</option>
 								    </select>
                                 </td>
                                 <td>
-                                    <input type="text" class="form-control" ng-model="productDetail.price" required/></td>
+                                    <input type="text" class="form-control" ng-model="expense.PRICE" required/></td>
                             </tr>
                         </tbody>
                     </table>
 
                     <div class="form-group">
-                        <input ng-hide="!productDetails.length" type="button" class="btn btn-danger pull-right" ng-click="remove()" value="Remove">
+                        <input ng-hide="!expenses.length" type="button" class="btn btn-danger pull-right" ng-click="remove()" value="Remove">
                         <input type="submit" class="btn btn-primary addnew pull-right" value="Add New">
                     </div>
                 </form>

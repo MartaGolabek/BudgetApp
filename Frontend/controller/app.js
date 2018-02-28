@@ -20,7 +20,14 @@ app.config(function($routeProvider){
     .otherwise({ redirectTo: '/' });
 });
 
-app.controller("budgetController", ['$scope', function($scope) {
+app.controller("budgetController", ['$scope', '$http', function($scope, $http) {
+    var API_HOST = 'http://127.0.0.1:8080/'
+
+    $http.get(API_HOST + "expenses")
+    .then(function(response) {
+        $scope.expenses = response.data;
+        console.log($scope.expenses)
+    });
 
 	// mockup for year select
 	// TODO: implement CRUD operations
@@ -99,38 +106,59 @@ app.controller("budgetController", ['$scope', function($scope) {
         }];
     
         $scope.addNew = function(productDetail){
-            $scope.productDetails.push({ 
+            $scope.expenses.push({
                 'product': "", 
                 'category': $scope.productCategories[0].cat,
                 'price': "",
             });
+
+
         };
     
         $scope.remove = function(){
             var newDataList=[];
             $scope.selectedAll = false;
-            angular.forEach($scope.productDetails, function(selected){
+            angular.forEach($scope.expenses, function(selected){
                 if(!selected.selected){
-                    newDataList.push(selected);
+                    newDataList.push(selected);                
+                } else {
+                    $http.delete(API_HOST + 'expenses/' + selected.ID, {params: {ID: selected.ID}}).then(function(response) {
+                        console.log('DELETE');
+                        console.log(response);
+                    });
                 }
             }); 
-            $scope.productDetails = newDataList;
+            $scope.expenses = newDataList;
         };
     
     // TODO: check how checkAll works
-    $scope.checkAll = function () {
-        if (!$scope.selectedAll) {
-            $scope.selectedAll = false;
-            console.log($scope.selectedAll);
-        } else {
-            $scope.selectedAll = true;
-            console.log($scope.selectedAll);
-        }
-        angular.forEach($scope.productDetails, function(productDetail) {
-            productDetail.selected = $scope.selectedAll;
-        });
-    };    	
+    // $scope.checkAll = function () {
+    //     console.log('checkAll start');
+    //     console.log($scope.selectedAll);
 
+    //     if (!$scope.selectedAll) {
+    //         $scope.selectedAll = true;
+    //         console.log('false -> true');
+    //         console.log($scope.selectedAll);
+    //     } else {
+    //         $scope.selectedAll = false;
+    //         console.log('true -> false');
+    //         console.log($scope.selectedAll);
+    //     }
+
+    //     angular.forEach($scope.expenses, function(expense) {
+    //         expense.selected = $scope.selectedAll;
+    //         console.log(expense.selected);
+    //     });
+    // };
+
+    $scope.selectedAll = false;
+
+    $scope.checkAll = function () {
+        angular.forEach($scope.expenses, function(expense) {
+            expense.selected = $scope.selectedAll;
+        });
+    }
 
 }]);
 
