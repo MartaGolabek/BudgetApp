@@ -14,6 +14,7 @@
                                 <th>Product</th>
                                 <th>Product category</th>
                                 <th>Price (EUR)</th>
+                                <th>Date</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -29,7 +30,12 @@
 								    </select>
                                 </td>
                                 <td>
-                                    <input type="text" class="form-control" ng-model="expense.PRICE" required/></td>
+                                    <input type="text" class="form-control" ng-model="expense.PRICE" required/>
+                                </td>
+                                <td>
+                                    <!-- adjust date format -->
+                                    <input type="text" class="form-control" ng-model="expense.DATE" required/>
+                                </td>
                             </tr>
                         </tbody>
                     </table>

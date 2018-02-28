@@ -18,18 +18,20 @@ class Expense(db.Model):
     PRODUCT_NAME = db.Column(db.String(80))
     PRODUCT_CAT = db.Column(db.String(80))
     PRICE = db.Column(db.REAL)
+    DATE = db.Column(db.Date)
 
-    def __init__(self, ID, PRODUCT_NAME, PRODUCT_CAT, PRICE):
+    def __init__(self, ID, PRODUCT_NAME, PRODUCT_CAT, PRICE, DATE):
         self.ID = ID
         self.PRODUCT_NAME = PRODUCT_NAME
         self.PRODUCT_CAT = PRODUCT_CAT
         self.PRICE = PRICE
+        self.DATE = DATE
 
 
 class ExpenseSchema(ma.Schema):
     class Meta:
         # Fields to expose
-        fields = ['ID', 'PRODUCT_NAME', 'PRODUCT_CAT', 'PRICE']
+        fields = ['ID', 'PRODUCT_NAME', 'PRODUCT_CAT', 'PRICE', 'DATE']
 
 
 expense_schema = ExpenseSchema()

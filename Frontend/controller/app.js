@@ -104,6 +104,23 @@ app.controller("budgetController", ['$scope', '$http', function($scope, $http) {
             'category':'Paper stationery',
             'price':'1.50'
         }];
+
+        $scope.budgetDetails = [
+        {
+            'YEAR': '2018',
+            'MONTH': 'April',
+            'BUD_VALUE': 800
+        },
+        {
+            'YEAR': '2018',
+            'MONTH':'June',
+            'BUD_VALUE': 850
+        },
+        {
+            'YEAR': '2018',
+            'MONTH': 'April',
+            'BUD_VALUE': 600
+        }];
     
         $scope.addNew = function(productDetail){
             $scope.expenses.push({
