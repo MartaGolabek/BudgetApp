@@ -62,50 +62,72 @@ app.controller("budgetController", ['$scope', function($scope) {
 		};
 
 		// test
-		$scope.personalDetails = [
+		$scope.productCategories = [
+			{id: 1, cat: 'Household'},
+			{id: 2, cat: 'Bakery'},
+			{id: 3, cat: 'Dairy & Eggs'},
+			{id: 4, cat: 'Drinks'},
+			{id: 5, cat: 'Fruits & Vegetables'},
+			{id: 6, cat: 'Meat & Fish'},
+			{id: 7, cat: 'Other food'},
+			{id: 8, cat: 'Health & Beauty'},
+			{id: 9, cat: 'Sport'},
+			{id: 10, cat: 'Education'},
+			{id: 11, cat: 'Hobby'},
+			{id: 12, cat: 'Paper stationery'},
+			{id: 13, cat: 'Baby'},
+			{id: 14, cat: 'Music & Movies'},
+			{id: 15, cat: 'Press & Books'},
+			{id: 16, cat: 'Others'},
+		];
+
+		$scope.productDetails = [
         {
-            'fname':'Muhammed',
-            'lname':'Shanid',
-            'email':'shanid@shanid.com'
+            'product':'Milk',
+            'category':'Dairy & Eggs',
+            'price':'0.80'
         },
         {
-            'fname':'John',
-            'lname':'Abraham',
-            'email':'john@john.com'
+            'product':'Rolls',
+            'category':'Bakery',
+            'price':'1.60'
         },
         {
-            'fname':'Roy',
-            'lname':'Mathew',
-            'email':'roy@roy.com'
+            'product':'Pen',
+            'category':'Paper stationery',
+            'price':'1.50'
         }];
     
-        $scope.addNew = function(personalDetail){
-            $scope.personalDetails.push({ 
-                'fname': "", 
-                'lname': "",
-                'email': "",
+        $scope.addNew = function(productDetail){
+            $scope.productDetails.push({ 
+                'product': "", 
+                'category': $scope.productCategories[0].cat,
+                'price': "",
             });
         };
     
         $scope.remove = function(){
             var newDataList=[];
             $scope.selectedAll = false;
-            angular.forEach($scope.personalDetails, function(selected){
+            angular.forEach($scope.productDetails, function(selected){
                 if(!selected.selected){
                     newDataList.push(selected);
                 }
             }); 
-            $scope.personalDetails = newDataList;
+            $scope.productDetails = newDataList;
         };
     
+    // TODO: check how checkAll works
     $scope.checkAll = function () {
         if (!$scope.selectedAll) {
-            $scope.selectedAll = true;
-        } else {
             $scope.selectedAll = false;
+            console.log($scope.selectedAll);
+        } else {
+            $scope.selectedAll = true;
+            console.log($scope.selectedAll);
         }
-        angular.forEach($scope.personalDetails, function(personalDetail) {
-            personalDetail.selected = $scope.selectedAll;
+        angular.forEach($scope.productDetails, function(productDetail) {
+            productDetail.selected = $scope.selectedAll;
         });
     };    	
 
