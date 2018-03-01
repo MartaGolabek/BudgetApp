@@ -6,22 +6,20 @@ var app = angular.module('budgetApp', ['ngRoute']);
 app.config(function($routeProvider){
   return $routeProvider
     .when('/targets', {
-      controller: 'budgetController',
       templateUrl: 'templates/targets.html'
     })
     .when('/expenses', {
-      controller: 'budgetController',
       templateUrl: 'templates/expenses.html'
     })
     .when('/analysis', {
-      controller: 'budgetController',
       templateUrl: 'templates/analysis.html'
     })
     .otherwise({ redirectTo: '/' });
 });
 
 app.controller("budgetController", ['$scope', '$http', function($scope, $http) {
-    var API_HOST = 'http://127.0.0.1:8080/'
+    var API_HOST = 'http://127.0.0.1:8080/';
+    $scope.saveShow = false;
 
     $http.get(API_HOST + "expenses")
     .then(function(response) {
@@ -121,17 +119,70 @@ app.controller("budgetController", ['$scope', '$http', function($scope, $http) {
             'MONTH': 'April',
             'BUD_VALUE': 600
         }];
+
+        var getDate = function() {
+            var today = new Date();
+            var dd = today.getDate();
+            var mm = today.getMonth()+1; //January is 0!
+            var yyyy = today.getFullYear();
+
+            if(dd<10) {
+                dd = '0'+dd;
+            } 
+
+            if(mm<10) {
+                mm = '0'+mm;
+            } 
+
+            today = yyyy + '-' + mm + '-' + dd;
+
+            return today
+        }
     
         $scope.addNew = function(productDetail){
-            $scope.expenses.push({
-                'product': "", 
-                'category': $scope.productCategories[0].cat,
-                'price': "",
+            // $scope.expenses.push({
+            //     'PRODUCT_NAME': "", 
+            //     'PRODUCT_CAT': $scope.productCategories[0].cat,
+            //     'PRICE': "",
+            //     'DATE': getDate()
+            // });
+
+            console.log('Add new');
+
+            $http.post(API_HOST + 'expenses', {"product_name": "Type your product", "product_cat": $scope.productCategories[0].cat, "price": "0", "date": getDate() })
+            .then(function(response) {
+                console.log('POST');
+                console.log(response);
+            });
+        }
+
+        $scope.changedIDs = new Set();
+    
+        $scope.saveChanges = function() {
+            $scope.changedIDs.forEach(function(e) {
+                    var found = $scope.expenses.find(function(element) {
+                      return element.ID == e;
+                    });
+
+                    $http.put(API_HOST + 'expenses/' + e, {"product_name": found.PRODUCT_NAME, "product_cat": found.PRODUCT_CAT, 
+                        "price": found.PRICE, "date": found.DATE}).then(function(response) {
+                    console.log('PUT');
+                    console.log(response);
+                });      
             });
 
+            $scope.saveShow = false;
+            $scope.changedIDs = new Set();
+        }
 
-        };
-    
+        $scope.adjustShowBtn = function(id) {
+            console.log('Changed id:')
+            console.log(id);
+            $scope.changedIDs.add(id);
+
+            $scope.saveShow = true;
+        }
+
         $scope.remove = function(){
             var newDataList=[];
             $scope.selectedAll = false;

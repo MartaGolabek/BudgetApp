@@ -38,3 +38,11 @@ div.jumbotron {
 	margin-bottom: 0px;
 	border-radius:0px;
 }
+
+button.btn-default a {
+	color: black;
+}
+
+button.btn-default a:hover {
+	text-decoration: none;
+}

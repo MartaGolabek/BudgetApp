@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
 import os
 from flask_cors import CORS, cross_origin
+from datetime import datetime
 
 app = Flask(__name__) # define app using Flask
 basedir = os.path.abspath(os.path.dirname(__file__))
@@ -62,12 +63,11 @@ def get_one(id):
 @cross_origin(origin='localhost', headers=['Content-Type','Authorization'])
 def add_one():
     # retrieve a name from a request body
-    # ID automatically or have to be explicitly set?
-    id = int(request.json['id'])
     product_name = request.json['product_name']
     product_cat = request.json['product_cat']
     price = float(request.json['price'])
-    new_expense = Expense(id, product_name, product_cat, price)
+    date = datetime.strptime(request.json['date'], '%Y-%m-%d')
+    new_expense = Expense(None, product_name, product_cat, price, date)
     db.session.add(new_expense)
     db.session.commit()
     return expense_schema.jsonify(new_expense)
@@ -80,9 +80,11 @@ def edit_one(id):
     product_name = request.json['product_name']
     product_cat = request.json['product_cat']
     price = request.json['price']
+    date = request.json['date']
     new_expense.PRODUCT_NAME = product_name
     new_expense.PRODUCT_CAT = product_cat
     new_expense.PRICE = price
+    new_expense.DATE = datetime.strptime(request.json['date'], '%Y-%m-%d')
     db.session.commit()
     return expense_schema.jsonify(new_expense)
 
