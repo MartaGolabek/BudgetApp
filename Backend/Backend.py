@@ -138,5 +138,26 @@ def add_one_budget():
     db.session.commit()
     return budget_schema.jsonify(new_budget)
 
+@app.route('/targets/<int:id>', methods=['PUT'])
+@cross_origin(origin='localhost', headers=['Content-Type','Authorization'])
+def edit_one_budget(id):
+    new_budget = Budget.query.get(id)
+    YEAR = request.json['year']
+    MONTH = request.json['month']
+    BUD_VALUE = request.json['bud_value']
+    new_budget.YEAR = YEAR
+    new_budget.MONTH = MONTH
+    new_budget.BUD_VALUE = BUD_VALUE
+    db.session.commit()
+    return budget_schema.jsonify(new_budget)
+
+@app.route('/targets/<int:id>', methods=['DELETE'])
+@cross_origin(origin='localhost', headers=['Content-Type','Authorization'])
+def remove_one_budget(id):
+    remove_budget = Budget.query.get(id)
+    db.session.delete(remove_budget)
+    db.session.commit()
+    return budget_schema.jsonify(remove_budget)
+
 if __name__ == '__main__':
     app.run(debug=True, port=8080) #run app on port 8080 in debug mode

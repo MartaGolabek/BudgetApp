@@ -20,6 +20,7 @@ app.config(function($routeProvider){
 app.controller("budgetController", ['$scope', '$http', function($scope, $http) {
     var API_HOST = 'http://127.0.0.1:8080/';
     $scope.saveShow = false;
+    $scope.budgetSaveShow = false;
 
     /****************************************************** GET *************************************************/
 
@@ -208,6 +209,34 @@ app.controller("budgetController", ['$scope', '$http', function($scope, $http) {
             $scope.saveShow = true;
         }
 
+
+        $scope.budgetChangedIDs = new Set();
+    
+        $scope.budgetSaveChanges = function() {
+            $scope.budgetChangedIDs.forEach(function(e) {
+                    var found = $scope.budgetDetails.find(function(element) {
+                      return element.ID == e;
+                    });
+
+                    $http.put(API_HOST + 'targets/' + e, {"year": found.YEAR, "month": found.MONTH, 
+                        "bud_value": found.BUD_VALUE}).then(function(response) {
+                    console.log('PUT');
+                    console.log(response);
+                });      
+            });
+
+            $scope.budgetSaveShow = false;
+            $scope.budgetChangedIDs = new Set();
+        }
+
+        $scope.adjustShowBudgetBtn = function(id) {
+            console.log('Changed id:')
+            console.log(id);
+            $scope.budgetChangedIDs.add(id);
+
+            $scope.budgetSaveShow = true;
+        }
+
         /***************************************************** DELETE **************************************************************/
 
         $scope.remove = function(){
@@ -224,6 +253,22 @@ app.controller("budgetController", ['$scope', '$http', function($scope, $http) {
                 }
             }); 
             $scope.expenses = newDataList;
+        };
+
+        $scope.removeBudget = function(){
+            var newDataList=[];
+            $scope.selectedAllBudgets = false;
+            angular.forEach($scope.budgetDetails, function(selected){
+                if(!selected.selected){
+                    newDataList.push(selected);                
+                } else {
+                    $http.delete(API_HOST + 'targets/' + selected.ID, {params: {ID: selected.ID}}).then(function(response) {
+                        console.log('DELETE');
+                        console.log(response);
+                    });
+                }
+            }); 
+            $scope.budgetDetails = newDataList;
         };
 
         /******************************************************* SELECT *************************************************************8*/
