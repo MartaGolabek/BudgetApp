@@ -21,10 +21,21 @@ app.controller("budgetController", ['$scope', '$http', function($scope, $http) {
     var API_HOST = 'http://127.0.0.1:8080/';
     $scope.saveShow = false;
 
+    /****************************************************** GET *************************************************/
+
     $http.get(API_HOST + "expenses")
     .then(function(response) {
         $scope.expenses = response.data;
         console.log($scope.expenses)
+    });
+
+    $http.get(API_HOST + "targets")
+    .then(function(response) {
+        $scope.budgetDetails = response.data;
+        $scope.budgetDetails.forEach(function (b) {
+            b.YEAR = b.YEAR.toString();
+        });
+        console.log($scope.budgetDetails)
     });
 
 	// mockup for year select
@@ -103,22 +114,22 @@ app.controller("budgetController", ['$scope', '$http', function($scope, $http) {
             'price':'1.50'
         }];
 
-        $scope.budgetDetails = [
-        {
-            'YEAR': '2018',
-            'MONTH': 'April',
-            'BUD_VALUE': 800
-        },
-        {
-            'YEAR': '2018',
-            'MONTH':'June',
-            'BUD_VALUE': 850
-        },
-        {
-            'YEAR': '2018',
-            'MONTH': 'April',
-            'BUD_VALUE': 600
-        }];
+        // $scope.budgetDetails = [
+        // {
+        //     'YEAR': '2018',
+        //     'MONTH': 'April',
+        //     'BUD_VALUE': 800
+        // },
+        // {
+        //     'YEAR': '2018',
+        //     'MONTH':'June',
+        //     'BUD_VALUE': 850
+        // },
+        // {
+        //     'YEAR': '2018',
+        //     'MONTH': 'April',
+        //     'BUD_VALUE': 600
+        // }];
 
         var getDate = function() {
             var today = new Date();
@@ -138,6 +149,8 @@ app.controller("budgetController", ['$scope', '$http', function($scope, $http) {
 
             return today
         }
+
+        /************************************************ POST *****************************************************/
     
         $scope.addNew = function(productDetail){
             // $scope.expenses.push({
@@ -155,6 +168,18 @@ app.controller("budgetController", ['$scope', '$http', function($scope, $http) {
                 console.log(response);
             });
         }
+
+        $scope.addNewBudget = function(productDetail){
+            console.log('Add new budget!');
+
+            $http.post(API_HOST + 'targets', {"year": $scope.budgetEntity.year, "month": $scope.budgetEntity.month, "budget": $scope.budgetEntity.budgetValue })
+            .then(function(response) {
+                console.log('POST');
+                console.log(response);
+            });
+        }
+
+        /**************************************************** PUT ************************************************88*/
 
         $scope.changedIDs = new Set();
     
@@ -183,6 +208,8 @@ app.controller("budgetController", ['$scope', '$http', function($scope, $http) {
             $scope.saveShow = true;
         }
 
+        /***************************************************** DELETE **************************************************************/
+
         $scope.remove = function(){
             var newDataList=[];
             $scope.selectedAll = false;
@@ -198,35 +225,44 @@ app.controller("budgetController", ['$scope', '$http', function($scope, $http) {
             }); 
             $scope.expenses = newDataList;
         };
+
+        /******************************************************* SELECT *************************************************************8*/
     
-    // TODO: check how checkAll works
-    // $scope.checkAll = function () {
-    //     console.log('checkAll start');
-    //     console.log($scope.selectedAll);
+        // TODO: check how checkAll works
+        // $scope.checkAll = function () {
+        //     console.log('checkAll start');
+        //     console.log($scope.selectedAll);
 
-    //     if (!$scope.selectedAll) {
-    //         $scope.selectedAll = true;
-    //         console.log('false -> true');
-    //         console.log($scope.selectedAll);
-    //     } else {
-    //         $scope.selectedAll = false;
-    //         console.log('true -> false');
-    //         console.log($scope.selectedAll);
-    //     }
+        //     if (!$scope.selectedAll) {
+        //         $scope.selectedAll = true;
+        //         console.log('false -> true');
+        //         console.log($scope.selectedAll);
+        //     } else {
+        //         $scope.selectedAll = false;
+        //         console.log('true -> false');
+        //         console.log($scope.selectedAll);
+        //     }
 
-    //     angular.forEach($scope.expenses, function(expense) {
-    //         expense.selected = $scope.selectedAll;
-    //         console.log(expense.selected);
-    //     });
-    // };
+        //     angular.forEach($scope.expenses, function(expense) {
+        //         expense.selected = $scope.selectedAll;
+        //         console.log(expense.selected);
+        //     });
+        // };
 
-    $scope.selectedAll = false;
+        $scope.selectedAll = false;
+        $scope.selectedAllBudgets = false;
 
-    $scope.checkAll = function () {
-        angular.forEach($scope.expenses, function(expense) {
-            expense.selected = $scope.selectedAll;
-        });
-    }
+        $scope.checkAll = function () {
+            angular.forEach($scope.expenses, function(expense) {
+                expense.selected = $scope.selectedAll;
+            });
+        }
+
+        $scope.checkAllBudgets = function () {
+            angular.forEach($scope.budgetDetails, function(budget) {
+                budget.selected = $scope.selectedAllBudgets;
+            });
+        }
 
 }]);
 

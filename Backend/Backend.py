@@ -13,6 +13,7 @@ ma = Marshmallow(app)
 
 app.config['CORS_HEADERS'] = 'Content-Type'
 cors = CORS(app, resources={r"/expenses/*": {"origins": "http://localhost:port"}})
+cors2 = CORS(app, resources={r"/targets/*": {"origins": "http://localhost:port"}})
 
 class Expense(db.Model):
     ID = db.Column(db.Integer, primary_key=True)
@@ -37,7 +38,6 @@ class ExpenseSchema(ma.Schema):
 
 expense_schema = ExpenseSchema()
 expenses_schema = ExpenseSchema(many=True)
-
 
 @app.route('/', methods=['GET'])
 def home():
@@ -97,6 +97,46 @@ def remove_one(id):
     db.session.commit()
     return expense_schema.jsonify(remove_expense)
 
+
+class Budget(db.Model):
+    ID = db.Column(db.Integer, primary_key=True)
+    YEAR = db.Column(db.Integer)
+    MONTH = db.Column(db.String(80))
+    BUD_VALUE = db.Column(db.REAL)
+
+    def __init__(self, ID, YEAR, MONTH, BUD_VALUE):
+        self.ID = ID
+        self.YEAR = YEAR
+        self.MONTH = MONTH
+        self.BUD_VALUE = BUD_VALUE
+
+
+class BudgetSchema(ma.Schema):
+    class Meta:
+        # Fields to expose
+        fields = ['ID', 'YEAR', 'MONTH', 'BUD_VALUE']
+
+
+budget_schema = BudgetSchema()
+budgets_schema = BudgetSchema(many=True)
+
+@app.route('/targets', methods=['GET'])
+@cross_origin(origin='localhost', headers=['Content-Type','Authorization'])
+def get_all_budgets():
+    all_budgets = Budget.query.all()
+    return budgets_schema.jsonify(all_budgets)
+
+@app.route('/targets', methods=['POST'])
+@cross_origin(origin='localhost', headers=['Content-Type','Authorization'])
+def add_one_budget():
+    # retrieve a name from a request body
+    YEAR = request.json['year']
+    MONTH = request.json['month']
+    BUDGET = float(request.json['budget'])
+    new_budget = Budget(None, YEAR, MONTH, BUDGET)
+    db.session.add(new_budget)
+    db.session.commit()
+    return budget_schema.jsonify(new_budget)
 
 if __name__ == '__main__':
     app.run(debug=True, port=8080) #run app on port 8080 in debug mode
