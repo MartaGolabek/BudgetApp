@@ -309,6 +309,66 @@ app.controller("budgetController", ['$scope', '$http', function($scope, $http) {
             });
         }
 
+
+        /******************************************************* C3-Bar-Chart ************************************************************/
+        $http.get(API_HOST + "analysis")
+        .then(function(response) {
+            $scope.expensesByDate = response.data;
+            $scope.dates = ['x'];
+            $scope.datesPur = [];
+            $scope.aggregatedExpenses = ['Accumulated expenses'];
+            $scope.expensesByDate.forEach(function(e) {
+                $scope.dates.push(e.Date);
+                $scope.datesPur.push(e.Date);
+                $scope.aggregatedExpenses.push(e.Expenses);
+            });
+
+            console.log($scope.expensesByDate)
+            console.log($scope.dates);
+            console.log($scope.aggregatedExpenses);
+        });
+
+         $scope.$on('$viewContentLoaded', function(){
+            //Here your view content is fully loaded !!
+            var chart = c3.generate({
+                bindto: '#chart',
+                data: {
+                    // x: 'x',
+                    columns: [
+                        // $scope.dates,
+                        $scope.aggregatedExpenses
+                    ],
+                    type: 'bar'
+                },
+                // axis: {
+                //     x:{
+                //         // type: 'text',
+                //         tick: {
+                //             format: function (x) {
+                //                 return x;
+                //             },
+                //             values: $scope.datesPur,
+                //         }
+                //     }
+                // },
+                bar: {
+                    width: {
+                        ratio: 0.5 // this makes bar width 50% of length between ticks
+                    }
+                    // or
+                    //width: 100 // this makes bar width 100px
+                }
+            });
+          });
+
+        // setTimeout(function () {
+        //     chart.load({
+        //         columns: [
+        //             ['data3', 130, -150, 200, 300, -200, 100]
+        //         ]
+        //     });
+        // }, 1000);
+
 }]);
 
 })();

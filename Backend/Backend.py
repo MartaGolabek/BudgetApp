@@ -14,6 +14,7 @@ ma = Marshmallow(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
 cors = CORS(app, resources={r"/expenses/*": {"origins": "http://localhost:port"}})
 cors2 = CORS(app, resources={r"/targets/*": {"origins": "http://localhost:port"}})
+cors3 = CORS(app, resources={r"/analysis/*": {"origins": "http://localhost:port"}})
 
 class Expense(db.Model):
     ID = db.Column(db.Integer, primary_key=True)
@@ -158,6 +159,30 @@ def remove_one_budget(id):
     db.session.delete(remove_budget)
     db.session.commit()
     return budget_schema.jsonify(remove_budget)
+
+class expenses_by_date(db.Model):
+    Expenses = db.Column(db.REAL)
+    Date = db.Column(db.String(80), primary_key=True)
+
+    def __init__(self, Expenses, Date):
+        self.Expenses = Expenses
+        self.Date = Date
+
+
+class AggregationSchema(ma.Schema):
+    class Meta:
+        # Fields to expose
+        fields = ['Expenses', 'Date']
+
+
+aggregation_schema = AggregationSchema()
+aggregations_schema = AggregationSchema(many=True)
+
+@app.route('/analysis', methods=['GET'])
+@cross_origin(origin='localhost', headers=['Content-Type','Authorization'])
+def get_all_aggregated_expenses():
+    all_expenses_by_date = expenses_by_date.query.all()
+    return aggregations_schema.jsonify(all_expenses_by_date)
 
 if __name__ == '__main__':
     app.run(debug=True, port=8080) #run app on port 8080 in debug mode
